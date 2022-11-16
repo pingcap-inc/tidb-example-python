@@ -51,7 +51,8 @@ def prepare_data():
             connection.commit()
 
 
-def buy_optimistic(thread_id, order_id, book_id, user_id, amount, optimistic_retry_times=5):
+def buy_optimistic(thread_id: int, order_id: int, book_id: int, user_id: int, amount: int,
+                   optimistic_retry_times: int = 5):
     connection = create_connection()
 
     txn_log_header = f"/* txn {thread_id} */"
@@ -110,7 +111,7 @@ def buy_optimistic(thread_id, order_id, book_id, user_id, amount, optimistic_ret
                         buy_optimistic(thread_id, order_id, book_id, user_id, amount, optimistic_retry_times - 1)
 
 
-def buy_pessimistic(thread_id, order_id, book_id, user_id, amount):
+def buy_pessimistic(thread_id: int, order_id: int, book_id: int, user_id: int, amount: int):
     connection = create_connection()
 
     txn_log_header = f"/* txn {thread_id} */"

@@ -31,7 +31,7 @@ class Player(Model):
         table_name = "player"
 
 
-def random_player(amount):
+def random_player(amount: int):
     players = []
     for _ in range(amount):
         players.append(Player(id=uuid.uuid4(), coins=10000, goods=10000))
@@ -63,7 +63,7 @@ def simple_example():
         print(f'id:{player.id}, coins:{player.coins}, goods:{player.goods}')
 
 
-def trade_check(sell_id, buy_id, amount, price):
+def trade_check(sell_id: str, buy_id: str, amount: int, price: int):
     sell_goods = Player.select(Player.goods).where(Player.id == sell_id).get().goods
     if sell_goods < amount:
         print(f'sell player {sell_id} goods not enough')
@@ -77,7 +77,7 @@ def trade_check(sell_id, buy_id, amount, price):
     return True
 
 
-def trade(sell_id, buy_id, amount, price):
+def trade(sell_id: str, buy_id: str, amount: int, price: int):
     with db.atomic() as txn:
         try:
             if trade_check(sell_id, buy_id, amount, price) is False:

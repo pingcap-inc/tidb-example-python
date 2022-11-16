@@ -21,21 +21,21 @@ import MySQLdb
 # And get a TiDB Cloud Serverless Tier in 1 min (no kidding, and it's free now)
 
 
-def create_player(cursor, player):
+def create_player(cursor, player: tuple):
     cursor.execute("INSERT INTO player (id, coins, goods) VALUES (%s, %s, %s)", player)
 
 
-def get_player(cursor, player_id):
+def get_player(cursor, player_id: str):
     cursor.execute("SELECT id, coins, goods FROM player WHERE id = %s", (player_id,))
     return cursor.fetchone()
 
 
-def get_players_with_limit(cursor, limit):
+def get_players_with_limit(cursor, limit: int):
     cursor.execute("SELECT id, coins, goods FROM player LIMIT %s", (limit,))
     return cursor.fetchall()
 
 
-def random_player(amount):
+def random_player(amount: int):
     players = []
     for _ in range(amount):
         players.append((uuid.uuid4(), 10000, 10000))
@@ -43,7 +43,7 @@ def random_player(amount):
     return players
 
 
-def bulk_create_player(cursor, players):
+def bulk_create_player(cursor, players: list):
     cursor.executemany("INSERT INTO player (id, coins, goods) VALUES (%s, %s, %s)", players)
 
 
@@ -52,7 +52,7 @@ def get_count(cursor):
     return cursor.fetchone()[0]
 
 
-def trade_check(cursor, sell_id, buy_id, amount, price):
+def trade_check(cursor, sell_id: str, buy_id: str, amount: int, price: int):
     get_player_with_lock_sql = "SELECT coins, goods FROM player WHERE id = %s FOR UPDATE"
 
     # sell player goods check
@@ -70,7 +70,7 @@ def trade_check(cursor, sell_id, buy_id, amount, price):
         return False
 
 
-def trade_update(cursor, sell_id, buy_id, amount, price):
+def trade_update(cursor, sell_id: str, buy_id: str, amount: int, price: int):
     update_player_sql = "UPDATE player set goods = goods + %s, coins = coins + %s WHERE id = %s"
 
     # deduct the goods of seller, and raise his/her the coins
@@ -79,7 +79,7 @@ def trade_update(cursor, sell_id, buy_id, amount, price):
     cursor.execute(update_player_sql, (amount, -price, buy_id))
 
 
-def trade(connection, sell_id, buy_id, amount, price):
+def trade(connection, sell_id: str, buy_id: str, amount: int, price: int):
     with connection.cursor() as cursor:
         if trade_check(cursor, sell_id, buy_id, amount, price) is False:
             connection.rollback()

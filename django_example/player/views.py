@@ -1,6 +1,6 @@
 from django.db import transaction
 from django.db.models import F
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import *

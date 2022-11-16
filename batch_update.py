@@ -24,7 +24,7 @@ connection = MySQLdb.connect(
 )
 
 
-def update_batch(cur, last_book_id=None, last_user_id=None):
+def update_batch(cur, last_book_id: int = None, last_user_id: int=None):
     if last_book_id is None or last_user_id is None:
         cur.execute("SELECT `book_id`, `user_id` FROM `bookshop`.`ratings` "
                     "WHERE `ten_point` != true "
