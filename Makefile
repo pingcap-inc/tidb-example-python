@@ -16,7 +16,7 @@
 
 test:
 	make dep peewee-test sqlalchemy-test mysqlclient-test \
-	pymysql-test mysql-connect-python-test
+	pymysql-test mysql-connector-python-test
 
 # helper
 
@@ -47,7 +47,7 @@ pymysql-test:
 	make recreate-table
 	python3 pymysql_example.py
 
-mysql-connect-python-test:
+mysql-connector-python-test:
 	make recreate-table
-	python3 mysql_connect_python_example.py
+	python3 mysql_connector_python_example.py
 

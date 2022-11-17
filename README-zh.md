@@ -10,7 +10,7 @@
 
 - [PyMySQL](/pymysql_example.py) 示例
 - [mysqlclient](/mysqlclient_example.py) 示例
-- [mysql-connect-python](/mysql_connect_python_example.py) 示例
+- [mysql-connector-python](/mysql_connector_python_example.py) 示例
 
 **ORM**
 

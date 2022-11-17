@@ -10,7 +10,7 @@ English | [中文](/README-zh.md)
 
 - [PyMySQL](/pymysql_example.py) example
 - [mysqlclient](/mysqlclient_example.py) example
-- [mysql-connect-python](/mysql_connect_python_example.py) example
+- [mysql-connector-python](/mysql_connector_python_example.py) example
 
 **ORM**
 
