@@ -1,5 +1,7 @@
 # tidb-example-python
 
+[![CI Workflow](https://github.com/pingcap-inc/tidb-example-python/actions/workflows/ci.yml/badge.svg)](https://github.com/pingcap-inc/tidb-example-python/actions/workflows/ci.yml)
+
 English | [中文](/README-zh.md)
 
 **tidb-example-python** is a sample project written by PingCAP for Python to connect to [TiDB](https://docs.pingcap.com/tidb/stable). You can find the following examples here.
