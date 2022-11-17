@@ -13,11 +13,12 @@
 # limitations under the License.
 
 import uuid
+from typing import List
 
 from sqlalchemy import create_engine, String, Column, Integer, select, func
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-engine = create_engine('mysql://root:@127.0.0.1:4000/test', echo=True)
+engine = create_engine('mysql://root:@192.168.31.31:4000/test', echo=True)
 Base = declarative_base()
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
@@ -34,7 +35,7 @@ class Player(Base):
         return f'Player(id={self.id!r}, coins={self.coins!r}, goods={self.goods!r})'
 
 
-def random_player(amount: int):
+def random_player(amount: int) -> List[Player]:
     players = []
     for _ in range(amount):
         players.append(Player(id=uuid.uuid4(), coins=10000, goods=10000))
@@ -42,7 +43,7 @@ def random_player(amount: int):
     return players
 
 
-def simple_example():
+def simple_example() -> None:
     with Session() as session:
         # create a player, who has a coin and a goods.
         session.add(Player(id="test", coins=1, goods=1))
@@ -71,7 +72,7 @@ def simple_example():
         session.commit()
 
 
-def trade_check(session, sell_id: str, buy_id: str, amount: int, price: int):
+def trade_check(session: Session, sell_id: str, buy_id: str, amount: int, price: int) -> bool:
     # sell player goods check
     sell_player = session.query(Player.goods).filter(Player.id == sell_id).with_for_update().one()
     if sell_player.goods < amount:
@@ -85,7 +86,7 @@ def trade_check(session, sell_id: str, buy_id: str, amount: int, price: int):
         return False
 
 
-def trade(sell_id: str, buy_id: str, amount: int, price: int):
+def trade(sell_id: str, buy_id: str, amount: int, price: int) -> None:
     with Session() as session:
         if trade_check(session, sell_id, buy_id, amount, price) is False:
             return
@@ -101,7 +102,7 @@ def trade(sell_id: str, buy_id: str, amount: int, price: int):
         print("trade success")
 
 
-def trade_example():
+def trade_example() -> None:
     with Session() as session:
         # create two players
         # player 1: id is "1", has only 100 coins.
@@ -124,6 +125,7 @@ def trade_example():
         for player in traders:
             print(player)
         session.commit()
+
 
 simple_example()
 trade_example()

@@ -37,7 +37,7 @@ def create_connection():
     )
 
 
-def prepare_data():
+def prepare_data() -> None:
     connection = create_connection()
     with connection:
         with connection.cursor() as cursor:
@@ -52,7 +52,7 @@ def prepare_data():
 
 
 def buy_optimistic(thread_id: int, order_id: int, book_id: int, user_id: int, amount: int,
-                   optimistic_retry_times: int = 5):
+                   optimistic_retry_times: int = 5) -> None:
     connection = create_connection()
 
     txn_log_header = f"/* txn {thread_id} */"
@@ -111,7 +111,7 @@ def buy_optimistic(thread_id: int, order_id: int, book_id: int, user_id: int, am
                         buy_optimistic(thread_id, order_id, book_id, user_id, amount, optimistic_retry_times - 1)
 
 
-def buy_pessimistic(thread_id: int, order_id: int, book_id: int, user_id: int, amount: int):
+def buy_pessimistic(thread_id: int, order_id: int, book_id: int, user_id: int, amount: int) -> None:
     connection = create_connection()
 
     txn_log_header = f"/* txn {thread_id} */"

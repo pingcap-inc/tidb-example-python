@@ -13,6 +13,7 @@
 # limitations under the License.
 import os
 import uuid
+from typing import List
 
 from peewee import *
 
@@ -31,7 +32,7 @@ class Player(Model):
         table_name = "player"
 
 
-def random_player(amount: int):
+def random_player(amount: int) -> List[Player]:
     players = []
     for _ in range(amount):
         players.append(Player(id=uuid.uuid4(), coins=10000, goods=10000))
@@ -39,7 +40,7 @@ def random_player(amount: int):
     return players
 
 
-def simple_example():
+def simple_example() -> None:
     # create a player, who has a coin and a goods.
     Player.create(id="test", coins=1, goods=1)
 
@@ -63,7 +64,7 @@ def simple_example():
         print(f'id:{player.id}, coins:{player.coins}, goods:{player.goods}')
 
 
-def trade_check(sell_id: str, buy_id: str, amount: int, price: int):
+def trade_check(sell_id: str, buy_id: str, amount: int, price: int) -> bool:
     sell_goods = Player.select(Player.goods).where(Player.id == sell_id).get().goods
     if sell_goods < amount:
         print(f'sell player {sell_id} goods not enough')
@@ -77,7 +78,7 @@ def trade_check(sell_id: str, buy_id: str, amount: int, price: int):
     return True
 
 
-def trade(sell_id: str, buy_id: str, amount: int, price: int):
+def trade(sell_id: str, buy_id: str, amount: int, price: int) -> None:
     with db.atomic() as txn:
         try:
             if trade_check(sell_id, buy_id, amount, price) is False:
@@ -97,7 +98,7 @@ def trade(sell_id: str, buy_id: str, amount: int, price: int):
             print("trade success")
 
 
-def trade_example():
+def trade_example() -> None:
     # create two players
     # player 1: id is "1", has only 100 coins.
     # player 2: id is "2", has 114514 coins, and 20 goods.

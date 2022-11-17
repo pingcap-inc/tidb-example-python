@@ -12,9 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import uuid
+from typing import List
 
 import pymysql.cursors
 from pymysql import Connection
+from pymysql.cursors import DictCursor
 
 
 def get_connection(autocommit: bool = False) -> Connection:
@@ -23,25 +25,25 @@ def get_connection(autocommit: bool = False) -> Connection:
                            user='root',
                            password='',
                            database='test',
-                           cursorclass=pymysql.cursors.DictCursor,
+                           cursorclass=DictCursor,
                            autocommit=autocommit)
 
 
-def create_player(cursor, player: tuple):
+def create_player(cursor: DictCursor, player: tuple) -> None:
     cursor.execute("INSERT INTO player (id, coins, goods) VALUES (%s, %s, %s)", player)
 
 
-def get_player(cursor, player_id: str):
+def get_player(cursor: DictCursor, player_id: str) -> dict:
     cursor.execute("SELECT id, coins, goods FROM player WHERE id = %s", (player_id,))
     return cursor.fetchone()
 
 
-def get_players_with_limit(cursor, limit: int):
+def get_players_with_limit(cursor: DictCursor, limit: int) -> tuple:
     cursor.execute("SELECT id, coins, goods FROM player LIMIT %s", (limit,))
     return cursor.fetchall()
 
 
-def random_player(amount: int):
+def random_player(amount: int) -> List[tuple]:
     players = []
     for _ in range(amount):
         players.append((uuid.uuid4(), 10000, 10000))
@@ -49,16 +51,16 @@ def random_player(amount: int):
     return players
 
 
-def bulk_create_player(cursor, players: list):
+def bulk_create_player(cursor: DictCursor, players: List[tuple]) -> None:
     cursor.executemany("INSERT INTO player (id, coins, goods) VALUES (%s, %s, %s)", players)
 
 
-def get_count(cursor):
+def get_count(cursor: DictCursor) -> int:
     cursor.execute("SELECT count(*) as count FROM player")
     return cursor.fetchone()['count']
 
 
-def trade_check(cursor, sell_id: str, buy_id: str, amount: int, price: int):
+def trade_check(cursor: DictCursor, sell_id: str, buy_id: str, amount: int, price: int) -> bool:
     get_player_with_lock_sql = "SELECT coins, goods FROM player WHERE id = %s FOR UPDATE"
 
     # sell player goods check
@@ -76,7 +78,7 @@ def trade_check(cursor, sell_id: str, buy_id: str, amount: int, price: int):
         return False
 
 
-def trade_update(cursor, sell_id: str, buy_id: str, amount: int, price: int):
+def trade_update(cursor: DictCursor, sell_id: str, buy_id: str, amount: int, price: int) -> None:
     update_player_sql = "UPDATE player set goods = goods + %s, coins = coins + %s WHERE id = %s"
 
     # deduct the goods of seller, and raise his/her the coins
@@ -85,7 +87,7 @@ def trade_update(cursor, sell_id: str, buy_id: str, amount: int, price: int):
     cursor.execute(update_player_sql, (amount, -price, buy_id))
 
 
-def trade(connection, sell_id: str, buy_id: str, amount: int, price: int):
+def trade(connection: Connection, sell_id: str, buy_id: str, amount: int, price: int) -> None:
     with connection.cursor() as cursor:
         if trade_check(cursor, sell_id, buy_id, amount, price) is False:
             connection.rollback()
@@ -101,7 +103,7 @@ def trade(connection, sell_id: str, buy_id: str, amount: int, price: int):
             print("trade success")
 
 
-def simple_example():
+def simple_example() -> None:
     with get_connection(autocommit=True) as connection:
         with connection.cursor() as cur:
             # create a player, who has a coin and a goods.
@@ -128,7 +130,7 @@ def simple_example():
                 print(player)
 
 
-def trade_example():
+def trade_example() -> None:
     with get_connection(autocommit=False) as connection:
         with connection.cursor() as cur:
             # create two players

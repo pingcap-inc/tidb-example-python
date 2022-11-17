@@ -27,7 +27,7 @@ def create_connection(autocommit=True):
     )
 
 
-def prepare_data():
+def prepare_data() -> None:
     connection = create_connection(autocommit=True)
     with connection:
         with connection.cursor() as cursor:
@@ -47,7 +47,7 @@ def prepare_data():
                                [(1, "Alice", True, 123), (2, "Bob", True, 123), (3, "Carol", False, 123)])
 
 
-def ask_for_leave(thread_id: int, txn1_run: Semaphore, doctor_id: int):
+def ask_for_leave(thread_id: int, txn1_run: Semaphore, doctor_id: int) -> None:
     connection = create_connection(False)
     txn_log_header = f"/* txn {thread_id} */"
     if thread_id != 1:

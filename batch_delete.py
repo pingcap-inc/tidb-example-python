@@ -21,7 +21,7 @@ connection = MySQLdb.connect(
     port=4000,
     user="root",
     password="",
-    database="test",
+    database="bookshop",
     autocommit=True
 )
 
