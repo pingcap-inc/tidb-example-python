@@ -18,7 +18,7 @@ from typing import List
 from sqlalchemy import create_engine, String, Column, Integer, select, func
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-engine = create_engine('mysql://root:@127.0.0.1:4000/test', echo=True)
+engine = create_engine('mysql://root:@127.0.0.1:4000/test')
 Base = declarative_base()
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
