@@ -12,11 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-# 'mysql-connect-python' is a package offered by mysql.
-# And maybe you can not use 'pip install mysql-connector-python' to install it.
-# You might need read the doc for install this package:
-# https://dev.mysql.com/doc/connector-python/en/connector-python-installation.html
 import uuid
 from typing import List
 
