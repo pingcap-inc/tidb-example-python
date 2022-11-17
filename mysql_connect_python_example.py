@@ -12,24 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
+# 'mysql-connect-python' is a package offered by mysql.
+# And maybe you can not use 'pip install mysql-connector-python' to install it.
+# You might need read the doc for install this package:
+# https://dev.mysql.com/doc/connector-python/en/connector-python-installation.html
 import uuid
 
-import MySQLdb
-
-# If you don't have a TiDB cluster, just register here:
-# https://tidbcloud.com/console/clusters/create-cluster
-# And get a TiDB Cloud Serverless Tier in 1 min (no kidding, and it's free now)
+from mysql.connector import connect, MySQLConnection
 
 
-def get_connection(autocommit: bool = True) -> MySQLdb.Connection:
-    return MySQLdb.connect(
-        host="127.0.0.1",
-        port=4000,
-        user="root",
-        password="",
-        database="test",
-        autocommit=autocommit
-    )
+def get_connection(autocommit: bool = True) -> MySQLConnection:
+    connection = connect(host='127.0.0.1',
+                         port=4000,
+                         user='root',
+                         password='',
+                         database='test')
+    connection.autocommit = autocommit
+    return connection
 
 
 def create_player(cursor, player: tuple):
@@ -49,7 +49,7 @@ def get_players_with_limit(cursor, limit: int):
 def random_player(amount: int):
     players = []
     for _ in range(amount):
-        players.append((uuid.uuid4(), 10000, 10000))
+        players.append((str(uuid.uuid4()), 10000, 10000))
 
     return players
 
@@ -107,8 +107,8 @@ def trade(connection, sell_id: str, buy_id: str, amount: int, price: int):
 
 
 def simple_example():
-    with get_connection(autocommit=True) as conn:
-        with conn.cursor() as cur:
+    with get_connection(autocommit=True) as connection:
+        with connection.cursor() as cur:
             # create a player, who has a coin and a goods.
             create_player(cur, ("test", 1, 1))
 
@@ -131,7 +131,6 @@ def simple_example():
             three_players = get_players_with_limit(cur, 3)
             for player in three_players:
                 print(f'id:{player[0]}, coins:{player[1]}, goods:{player[2]}')
-
 
 def trade_example():
     with get_connection(autocommit=False) as conn:
