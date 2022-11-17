@@ -5,6 +5,7 @@ greenlet==2.0.1
 importlib-metadata==5.0.0
 mysqlclient==2.1.1
 peewee==3.15.4
+PyMySQL==1.0.2
 pytz==2022.6
 SQLAlchemy==1.4.44
 sqlparse==0.4.3
