@@ -19,7 +19,7 @@ from peewee import *
 
 from playhouse.db_url import connect
 
-db = connect(os.environ.get('DATABASE') or 'mysql://root:@127.0.0.1:4000/test')
+db = connect('mysql://root:@127.0.0.1:4000/test')
 
 
 class Player(Model):
