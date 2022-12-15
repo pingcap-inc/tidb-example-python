@@ -20,7 +20,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/player/",
+					"raw": "http://localhost:8000/player/",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -40,7 +40,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/player/1",
+					"raw": "http://localhost:8000/player/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -60,7 +60,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/player/limit/3",
+					"raw": "http://localhost:8000/player/limit/3",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -81,7 +81,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/player/page?index=1&size=2",
+					"raw": "http://localhost:8000/player/page?index=1&size=2",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -111,7 +111,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/player/page?index=1&size=2",
+					"raw": "http://localhost:8000/player/page?index=1&size=2",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -138,7 +138,7 @@
 		{
 			"name": "Trade",
 			"request": {
-				"method": "PUT",
+				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "urlencoded",
@@ -166,7 +166,7 @@
 					]
 				},
 				"url": {
-					"raw": "http://localhost:8080/player/trade",
+					"raw": "http://localhost:8000/player/trade",
 					"protocol": "http",
 					"host": [
 						"localhost"

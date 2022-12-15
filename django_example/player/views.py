@@ -40,7 +40,7 @@ def get_by_id(request, player_id: int):
     return JsonResponse(result)
 
 
-@require_http_methods(["POST"])
+@require_POST
 @transaction.atomic
 def trade(request):
     sell_id, buy_id, amount, price = int(request.POST['sellID']), int(request.POST['buyID']), \

@@ -34,7 +34,7 @@ curl --location --request GET 'http://localhost:8000/player/count'
 
 printf "\n\n"
 echo "trade by two players:"
-curl --location --request PUT 'http://localhost:8000/player/trade' \
+curl --location --request POST 'http://localhost:8000/player/trade' \
   --header 'Content-Type: application/x-www-form-urlencoded' \
   --data-urlencode 'sellID=1' \
   --data-urlencode 'buyID=2' \
