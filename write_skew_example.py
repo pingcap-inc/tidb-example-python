@@ -60,7 +60,7 @@ def ask_for_leave(thread_id: int, txn1_run: Semaphore, doctor_id: int) -> None:
 
             try:
                 # txn 1 should be waiting until txn 2 is done.
-                if thread_id is 1:
+                if thread_id == 1:
                     txn1_run.acquire()
 
                 current_on_call = "SELECT COUNT(*) AS `count` FROM `doctors` " \
@@ -83,7 +83,7 @@ def ask_for_leave(thread_id: int, txn1_run: Semaphore, doctor_id: int) -> None:
                 connection.commit()
             finally:
                 # txn 2 is done. let txn 1 run again.
-                if thread_id is 2:
+                if thread_id == 2:
                     txn1_run.release()
 
 

@@ -88,7 +88,7 @@ def trade_check(session: Session, sell_id: str, buy_id: str, amount: int, price:
 
 def trade(sell_id: str, buy_id: str, amount: int, price: int) -> None:
     with Session() as session:
-        if trade_check(session, sell_id, buy_id, amount, price) is False:
+        if not trade_check(session, sell_id, buy_id, amount, price):
             return
 
         # deduct the goods of seller, and raise his/her the coins

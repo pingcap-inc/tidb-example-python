@@ -81,7 +81,7 @@ def trade_check(sell_id: str, buy_id: str, amount: int, price: int) -> bool:
 def trade(sell_id: str, buy_id: str, amount: int, price: int) -> None:
     with db.atomic() as txn:
         try:
-            if trade_check(sell_id, buy_id, amount, price) is False:
+            if not trade_check(sell_id, buy_id, amount, price):
                 txn.rollback()
                 return
 

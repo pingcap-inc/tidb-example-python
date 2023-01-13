@@ -169,7 +169,7 @@ if not (optimistic and alice and bob):
 
 prepare_data()
 
-if bool(optimistic) is True:
+if not bool(optimistic):
     buy_func = buy_optimistic
 else:
     buy_func = buy_pessimistic

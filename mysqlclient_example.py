@@ -95,7 +95,7 @@ def trade_update(cursor: Cursor, sell_id: str, buy_id: str, amount: int, price: 
 
 def trade(connection: Connection, sell_id: str, buy_id: str, amount: int, price: int) -> None:
     with connection.cursor() as cursor:
-        if trade_check(cursor, sell_id, buy_id, amount, price) is False:
+        if not trade_check(cursor, sell_id, buy_id, amount, price):
             connection.rollback()
             return
 
