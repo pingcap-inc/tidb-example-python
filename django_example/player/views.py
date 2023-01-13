@@ -27,7 +27,7 @@ def count(request):
 
 @require_GET
 def limit_list(request, limit: int = 0):
-    if limit is 0:
+    if limit == 0:
         return HttpResponse("")
     players = set(Player.objects.all()[:limit])
     dict_players = list(map(lambda p: p.as_dict(), players))
