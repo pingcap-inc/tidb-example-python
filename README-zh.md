@@ -53,14 +53,28 @@ make test
     pip install -r requirement.txt
     ```
 
-2. 初始化表
-
-    ```bash
-    mycli --host 127.0.0.1 --port 4000 -u root --no-warn < player_init.sql
-    ```
-
-3. 运行脚本
+2. 运行脚本
 
     ```bash
     python3 peewee_example.py
+    ```
+
+### TiDB Cloud Serverless Tier 连接
+
+1. 复制 `.env.example` 为 `.env`
+
+    ```bash
+    cp .env.example .env
+    ```
+
+2. 修改其中的环境变量
+
+    ```properties
+    TIDB_HOST='xxxxxxxx.aws.tidbcloud.com'
+    TIDB_PORT='4000'
+    TIDB_USER='xxxxxxxxxxx.root'
+    TIDB_PASSWORD='xxxxxxx'
+    TIDB_DB_NAME='test'
+    IS_SERVERLESS='true'
+    CA_PATH='/etc/ssl/cert.pem'
     ```

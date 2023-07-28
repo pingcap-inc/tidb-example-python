@@ -47,20 +47,34 @@ make test
 
 Using run the `peewee_example.py` script as an example:
 
-1. Install dependcy.
+1. Install dependencies.
 
     ```bash
     pip install -r requirement.txt
     ```
 
-2. Initial the table.
-
-    ```bash
-    mycli --host 127.0.0.1 --port 4000 -u root --no-warn < player_init.sql
-    ```
-
-3. Run the script.
+2. Run the script.
 
     ```bash
     python3 peewee_example.py
+    ```
+
+### Connect to Serverless Tier cluster
+
+1. Copy `.env.example` to `.env`
+
+    ```bash
+    cp .env.example .env
+    ```
+
+2. Modify the environment parameters in `.env`
+
+    ```properties
+    TIDB_HOST='xxxxxxxx.aws.tidbcloud.com'
+    TIDB_PORT='4000'
+    TIDB_USER='xxxxxxxxxxx.root'
+    TIDB_PASSWORD='xxxxxxx'
+    TIDB_DB_NAME='test'
+    IS_SERVERLESS='true'
+    CA_PATH='/etc/ssl/cert.pem'
     ```
