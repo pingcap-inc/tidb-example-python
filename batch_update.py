@@ -11,18 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import MySQLdb
 import time
-
-connection = MySQLdb.connect(
-    host="127.0.0.1",
-    port=4000,
-    user="root",
-    password="",
-    database="bookshop",
-    autocommit=True
-)
-
+from connect_tidb import get_mysqlclient_connection
 
 def update_batch(cur, last_book_id: int = None, last_user_id: int = None) -> (int, int):
     if last_book_id is None or last_user_id is None:
@@ -49,7 +39,7 @@ def update_batch(cur, last_book_id: int = None, last_user_id: int = None) -> (in
     return latest_book_id, latest_user_id
 
 
-with connection:
+with get_mysqlclient_connection() as connection:
     with connection.cursor() as cursor:
         # add a column `ten_point`
         # cursor.execute("ALTER TABLE `bookshop`.`ratings` ADD COLUMN `ten_point` BOOL NOT NULL DEFAULT FALSE")

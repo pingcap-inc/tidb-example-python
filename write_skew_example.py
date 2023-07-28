@@ -13,22 +13,11 @@
 # limitations under the License.
 from threading import Thread, Semaphore
 
-import MySQLdb
-
-
-def create_connection(autocommit=True):
-    return MySQLdb.connect(
-        host="127.0.0.1",
-        port=4000,
-        user="root",
-        password="",
-        database="test",
-        autocommit=autocommit
-    )
+from connect_tidb import get_mysqlclient_connection
 
 
 def prepare_data() -> None:
-    connection = create_connection(autocommit=True)
+    connection = get_mysqlclient_connection(autocommit=True)
     with connection:
         with connection.cursor() as cursor:
             # create table
@@ -48,7 +37,7 @@ def prepare_data() -> None:
 
 
 def ask_for_leave(thread_id: int, txn1_run: Semaphore, doctor_id: int) -> None:
-    connection = create_connection(False)
+    connection = get_mysqlclient_connection(autocommit=False)
     txn_log_header = f"/* txn {thread_id} */"
     if thread_id != 1:
         txn_log_header = "\t" + txn_log_header

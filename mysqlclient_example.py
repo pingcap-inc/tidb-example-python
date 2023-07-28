@@ -15,24 +15,13 @@
 import uuid
 from typing import List
 
-import MySQLdb
 from MySQLdb import Connection
 from MySQLdb.cursors import Cursor
+from connect_tidb import get_mysqlclient_connection, mysqlclient_recreate_table
 
 # If you don't have a TiDB cluster, just register here:
 # https://tidbcloud.com/console/clusters/create-cluster
 # And get a TiDB Cloud Serverless Tier in 1 min (no kidding, and it's free now)
-
-
-def get_connection(autocommit: bool = True) -> MySQLdb.Connection:
-    return MySQLdb.connect(
-        host="127.0.0.1",
-        port=4000,
-        user="root",
-        password="",
-        database="test",
-        autocommit=autocommit
-    )
 
 
 def create_player(cursor: Cursor, player: tuple) -> None:
@@ -110,7 +99,7 @@ def trade(connection: Connection, sell_id: str, buy_id: str, amount: int, price:
 
 
 def simple_example() -> None:
-    with get_connection(autocommit=True) as conn:
+    with get_mysqlclient_connection(autocommit=True) as conn:
         with conn.cursor() as cur:
             # create a player, who has a coin and a goods.
             create_player(cur, ("test", 1, 1))
@@ -137,7 +126,7 @@ def simple_example() -> None:
 
 
 def trade_example() -> None:
-    with get_connection(autocommit=False) as conn:
+    with get_mysqlclient_connection(autocommit=False) as conn:
         with conn.cursor() as cur:
             # create two players
             # player 1: id is "1", has only 100 coins.
@@ -163,5 +152,6 @@ def trade_example() -> None:
             print(f'id:2, coins:{player2_coin}, goods:{player2_goods}')
 
 
+mysqlclient_recreate_table()
 simple_example()
 trade_example()

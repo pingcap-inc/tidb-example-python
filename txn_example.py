@@ -17,6 +17,7 @@ import MySQLdb
 import os
 import datetime
 from threading import Thread
+from connect_tidb import get_mysqlclient_connection
 
 REPEATABLE_ERROR_CODE_SET = {
     9007,  # Transactions in TiKV encounter write conflicts.
@@ -26,19 +27,8 @@ REPEATABLE_ERROR_CODE_SET = {
 }
 
 
-def create_connection():
-    return MySQLdb.connect(
-        host="127.0.0.1",
-        port=4000,
-        user="root",
-        password="",
-        database="bookshop",
-        autocommit=False
-    )
-
-
 def prepare_data() -> None:
-    connection = create_connection()
+    connection = get_mysqlclient_connection(autocommit=False)
     with connection:
         with connection.cursor() as cursor:
             cursor.execute("INSERT INTO `books` (`id`, `title`, `type`, `published_at`, `price`, `stock`) "
@@ -53,7 +43,7 @@ def prepare_data() -> None:
 
 def buy_optimistic(thread_id: int, order_id: int, book_id: int, user_id: int, amount: int,
                    optimistic_retry_times: int = 5) -> None:
-    connection = create_connection()
+    connection = get_mysqlclient_connection(autocommit=False)
 
     txn_log_header = f"/* txn {thread_id} */"
     if thread_id != 1:
@@ -112,7 +102,7 @@ def buy_optimistic(thread_id: int, order_id: int, book_id: int, user_id: int, am
 
 
 def buy_pessimistic(thread_id: int, order_id: int, book_id: int, user_id: int, amount: int) -> None:
-    connection = create_connection()
+    connection = get_mysqlclient_connection(autocommit=False)
 
     txn_log_header = f"/* txn {thread_id} */"
     if thread_id != 1:

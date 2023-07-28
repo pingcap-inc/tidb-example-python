@@ -12,20 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import MySQLdb
 import datetime
 import time
+from connect_tidb import get_mysqlclient_connection
 
-connection = MySQLdb.connect(
-    host="127.0.0.1",
-    port=4000,
-    user="root",
-    password="",
-    database="bookshop",
-    autocommit=True
-)
-
-with connection:
+with get_mysqlclient_connection() as connection:
     with connection.cursor() as cursor:
         start_time = datetime.datetime(2022, 4, 15)
         end_time = datetime.datetime(2022, 4, 15, 0, 15)

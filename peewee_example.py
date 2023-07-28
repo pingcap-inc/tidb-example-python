@@ -11,16 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import os
 import uuid
 from typing import List
 
 from peewee import *
 
-from playhouse.db_url import connect
+from connect_tidb import get_peewee_db
 
-db = connect('mysql://root:@127.0.0.1:4000/test')
-
+db = get_peewee_db()
 
 class Player(Model):
     id = CharField(max_length=36, primary_key=True)
