@@ -37,8 +37,6 @@ class Config:
             raise Exception(
                 "CA_PATH is required when using serverless.\nIf you don't know how to get it, please refer to https://docs.pingcap.com/tidbcloud/secure-connections-to-serverless-clusters#root-certificate-default-path")
 
-        print(f"Config: {self.__dict__}")
-
 def get_mysqlclient_connection(autocommit:bool=True) -> MySQLdb.Connection:
     config = Config()
     db_conf = {
