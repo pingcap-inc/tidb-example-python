@@ -4,7 +4,7 @@
 
 [English](/README.md) | 中文
 
-**tidb-example-python** 是 PingCAP 为 Python 连接 [TiDB](https://docs.pingcap.com/tidb/stable) 而编写的示例项目。你可以在这里找到以下示例：
+**tidb-example-python** 是 PingCAP 为 Python 连接 [TiDB](https://docs.pingcap.com/tidb/stable) 而编写的示例项目。其所属文档为 [TiDB 开发者文档](https://docs.pingcap.com/zh/tidb/stable/dev-guide-overview)。你可以在这里找到以下示例：
 
 ## Driver
 
@@ -75,3 +75,7 @@ make test
 ### 单独运行某项测试
 
 以 **peewee_example.py** 为例：`python3 peewee_example.py`。
+
+### 预期输出
+
+[预期输出](/Expected-Output.md)
