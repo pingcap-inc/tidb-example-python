@@ -58,9 +58,7 @@
     TIDB_PASSWORD='xxxxxxx'
     # 希望本示例使用的数据库名称
     TIDB_DB_NAME='test'
-    # 使用的 TiDB 集群是否需要使用 SSL 连接
-    REQUIRE_SSL='true'
-    # 运行示例的实例上，CA 证书存在的位置，在 REQUIRE_SSL='true' 时必需
+    # 使用的 TiDB 集群如果要求使用安全连接，并使用自定义的 CA 证书时
     CA_PATH='/etc/ssl/cert.pem'
     ```
 

@@ -58,9 +58,7 @@ English | [中文](/README-zh.md)
   TIDB_PASSWORD='xxxxxxx'
   # The database name to be used for this example
   TIDB_DB_NAME='test'
-  # Whether the used TiDB cluster require secure connection
-  REQUIRE_SSL='true'
-  # The location of the CA certificate on the instance where the example is run. Required when REQUIRE_SSL='true'
+  # The location of the CA certificate on the instance where the example is run. Required when the used cluster require secure connection
   CA_PATH='/etc/ssl/cert.pem'
   ```
 

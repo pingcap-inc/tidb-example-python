@@ -30,12 +30,7 @@ class Config:
         self.tidb_user = os.getenv("TIDB_USER", "root")
         self.tidb_password = os.getenv("TIDB_PASSWORD", "")
         self.tidb_db_name = os.getenv("TIDB_DB_NAME", "test")
-        self.require_ssl = os.getenv("REQUIRE_SSL", "false").lower() == "true"
         self.ca_path = os.getenv("CA_PATH", "")
-
-        if self.require_ssl == True and self.ca_path == "":
-            raise Exception(
-                "CA_PATH is required when using serverless.\nIf you don't know how to get it, please refer to https://docs.pingcap.com/tidbcloud/secure-connections-to-serverless-clusters#root-certificate-default-path")
 
 def get_mysqlclient_connection(autocommit:bool=True) -> MySQLdb.Connection:
     config = Config()
@@ -48,7 +43,7 @@ def get_mysqlclient_connection(autocommit:bool=True) -> MySQLdb.Connection:
         "autocommit": autocommit
     }
 
-    if config.require_ssl:
+    if config.ca_path:
         db_conf["ssl_mode"] = "VERIFY_IDENTITY"
         db_conf["ssl"] = {"ca": config.ca_path}
 
@@ -66,7 +61,7 @@ def get_mysql_connector_python_connection(autocommit:bool=True) -> mysql.connect
         "autocommit": autocommit
     }
 
-    if config.require_ssl:
+    if config.ca_path:
         db_conf["ssl_verify_identity"] = True
         db_conf["ssl_ca"] = config.ca_path
 
@@ -85,7 +80,7 @@ def get_pymysql_connection(autocommit: bool = False) -> pymysql.Connection:
         "cursorclass": PyMySQLDictCursor,
     }
 
-    if config.require_ssl:
+    if config.ca_path:
         db_conf["ssl_verify_cert"] = True
         db_conf["ssl_verify_identity"] = True
         db_conf["ssl_ca"] = config.ca_path
@@ -96,7 +91,7 @@ def get_pymysql_connection(autocommit: bool = False) -> pymysql.Connection:
 def get_peewee_db() -> peewee.MySQLDatabase:
     config = Config()
     url = f'mysql://{config.tidb_user}:{config.tidb_password}@{config.tidb_host}:{config.tidb_port}/{config.tidb_db_name}'
-    if config.require_ssl:
+    if config.ca_path:
         return playhouse.db_url.connect(url, ssl_verify_cert=True, ssl_ca=config.ca_path)
     else:
         return playhouse.db_url.connect(url)
@@ -105,7 +100,7 @@ def get_peewee_db() -> peewee.MySQLDatabase:
 def get_sqlalchemy_engine():
     config = Config()
     url = f'mysql://{config.tidb_user}:{config.tidb_password}@{config.tidb_host}:{config.tidb_port}/{config.tidb_db_name}'
-    if config.require_ssl:
+    if config.ca_path:
         return sqlalchemy.create_engine(url, connect_args={
             "ssl_mode": "VERIFY_IDENTITY",
             "ssl": { "ca": config.ca_path }
