@@ -15,12 +15,12 @@
 import uuid
 from typing import List
 
-from sqlalchemy import create_engine, String, Column, Integer, select, func
+from sqlalchemy import String, Column, Integer, select, func
 from sqlalchemy.orm import declarative_base, sessionmaker
+from connect_tidb import get_sqlalchemy_engine
 
-engine = create_engine('mysql://root:@127.0.0.1:4000/test')
+engine = get_sqlalchemy_engine()
 Base = declarative_base()
-Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 
 
@@ -127,5 +127,7 @@ def trade_example() -> None:
         session.commit()
 
 
+Base.metadata.drop_all(engine)
+Base.metadata.create_all(engine)
 simple_example()
 trade_example()

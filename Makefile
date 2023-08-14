@@ -26,28 +26,20 @@ test:
 dep:
 	pip3 install -r requirement.txt
 
-recreate-table:
-	mycli --host 127.0.0.1 --port 4000 -u root --no-warn < player_init.sql
-
 # ORMs
 peewee-test:
-	make recreate-table
 	python3 peewee_example.py
 
 sqlalchemy-test:
-	make recreate-table
 	python3 sqlalchemy_example.py
 
 # Drivers
 mysqlclient-test:
-	make recreate-table
 	python3 mysqlclient_example.py
 
 pymysql-test:
-	make recreate-table
 	python3 pymysql_example.py
 
 mysql-connector-python-test:
-	make recreate-table
 	python3 mysql_connector_python_example.py
 

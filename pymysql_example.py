@@ -14,20 +14,9 @@
 import uuid
 from typing import List
 
-import pymysql.cursors
 from pymysql import Connection
 from pymysql.cursors import DictCursor
-
-
-def get_connection(autocommit: bool = False) -> Connection:
-    return pymysql.connect(host='127.0.0.1',
-                           port=4000,
-                           user='root',
-                           password='',
-                           database='test',
-                           cursorclass=DictCursor,
-                           autocommit=autocommit)
-
+from connect_tidb import get_pymysql_connection, pymysql_recreate_table
 
 def create_player(cursor: DictCursor, player: tuple) -> None:
     cursor.execute("INSERT INTO player (id, coins, goods) VALUES (%s, %s, %s)", player)
@@ -104,7 +93,7 @@ def trade(connection: Connection, sell_id: str, buy_id: str, amount: int, price:
 
 
 def simple_example() -> None:
-    with get_connection(autocommit=True) as connection:
+    with get_pymysql_connection(autocommit=True) as connection:
         with connection.cursor() as cur:
             # create a player, who has a coin and a goods.
             create_player(cur, ("test", 1, 1))
@@ -131,7 +120,7 @@ def simple_example() -> None:
 
 
 def trade_example() -> None:
-    with get_connection(autocommit=False) as connection:
+    with get_pymysql_connection(autocommit=False) as connection:
         with connection.cursor() as cur:
             # create two players
             # player 1: id is "1", has only 100 coins.
@@ -155,5 +144,6 @@ def trade_example() -> None:
             print(get_player(cur, "2"))
 
 
+pymysql_recreate_table()
 simple_example()
 trade_example()

@@ -13,20 +13,12 @@
 # limitations under the License.
 
 import uuid
+from connect_tidb import get_mysql_connector_python_connection, mysql_connector_python_recreate_table
+
 from typing import List
 
-from mysql.connector import connect, MySQLConnection
+from mysql.connector import MySQLConnection
 from mysql.connector.cursor import MySQLCursor
-
-
-def get_connection(autocommit: bool = True) -> MySQLConnection:
-    connection = connect(host='127.0.0.1',
-                         port=4000,
-                         user='root',
-                         password='',
-                         database='test')
-    connection.autocommit = autocommit
-    return connection
 
 
 def create_player(cursor: MySQLCursor, player: tuple) -> None:
@@ -104,7 +96,7 @@ def trade(connection: MySQLConnection, sell_id: str, buy_id: str, amount: int, p
 
 
 def simple_example() -> None:
-    with get_connection(autocommit=True) as connection:
+    with get_mysql_connector_python_connection(autocommit=True) as connection:
         with connection.cursor() as cur:
             # create a player, who has a coin and a goods.
             create_player(cur, ("test", 1, 1))
@@ -133,7 +125,7 @@ def simple_example() -> None:
 
 
 def trade_example() -> None:
-    with get_connection(autocommit=False) as conn:
+    with get_mysql_connector_python_connection(autocommit=False) as conn:
         with conn.cursor() as cur:
             # create two players
             # player 1: id is "1", has only 100 coins.
@@ -159,5 +151,6 @@ def trade_example() -> None:
             print(f'id:2, coins:{player2_coin}, goods:{player2_goods}')
 
 
+mysql_connector_python_recreate_table()
 simple_example()
 trade_example()

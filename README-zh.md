@@ -4,24 +4,24 @@
 
 [English](/README.md) | 中文
 
-**tidb-example-python** 是 PingCAP 为 Python 连接 [TiDB](https://docs.pingcap.com/tidb/stable) 而编写的示例项目。你可以在这里找到以下示例：
+**tidb-example-python** 是 PingCAP 为 Python 连接 [TiDB](https://docs.pingcap.com/tidb/stable) 而编写的示例项目。其所属文档为 [TiDB 开发者文档](https://docs.pingcap.com/zh/tidb/stable/dev-guide-overview)。你可以在这里找到以下示例：
 
-**Driver**
+## Driver
 
 - [PyMySQL](/pymysql_example.py) 示例
 - [mysqlclient](/mysqlclient_example.py) 示例
 - [mysql-connector-python](/mysql_connector_python_example.py) 示例
 
-**ORM**
+## ORM
 
 - [SQLAlchemy](/sqlalchemy_example.py) 示例
 - [peewee](/peewee_example.py) 示例
 
-**Framework**
+## Framework
 
 - [Django](/django_example) 示例
 
-**Scenario**
+## Scenario
 
 - [Serverless Tier 连接](/serverless_tier_example.py)示例
 - [批量删除场景](/batch_delete.py)示例
@@ -29,11 +29,38 @@
 - [避免写偏斜](/write_skew_example.py)示例
 - [乐观/悲观事务](/txn_example.py)示例
 
-## 依赖
+## 前提要求
 
-- [TiDB](https://docs.pingcap.com/tidb/stable)
-- [mycli](https://www.mycli.net/)
-- [Python 3.6+](https://www.python.org/)
+- 已安装 [Python](https://www.python.org/)，推荐版本 3.10 及以上。
+- 启动你的 TiDB 集群，如果你还没有 TiDB 集群：
+
+  - 推荐参考[创建 TiDB Serverless 集群](https://docs.pingcap.com/zh/tidb/stable/dev-guide-build-cluster-in-cloud)文档创建你自己的 TiDB Cloud 集群。
+  - 备选参考[部署本地测试 TiDB 集群](https://docs.pingcap.com/zh/tidb/stable/quick-start-with-tidb)或[部署正式 TiDB 集群](https://docs.pingcap.com/zh/tidb/stable/production-deployment-using-tiup)文档创建本地集群。
+
+- 已获取代码并安装依赖
+
+    ```bash
+    git clone https://github.com/pingcap-inc/tidb-example-python.git
+    cd tidb-example-python
+    pip install requirement.txt
+    ```
+
+- 已正确配置代码目录下的 `.env` 配置文件，你可以用 `cp .env.example .env` 复制初始配置文件后进行更改。如果你不知道这些信息如何获取，请参考 [Obtain the connection parameters](https://docs.pingcap.com/tidbcloud/connect-via-standard-connection-serverless#obtain-the-connection-parameters) 及 [Where is the CA root path on my system?](https://docs.pingcap.com/tidbcloud/secure-connections-to-serverless-tier-clusters#where-is-the-ca-root-path-on-my-system) 文档：
+
+    ```properties
+    # TiDB 集群地址
+    TIDB_HOST='xxxxxxxx.aws.tidbcloud.com'
+    # TiDB 集群端口
+    TIDB_PORT='4000'
+    # TiDB 集群用户名
+    TIDB_USER='xxxxxxxxxxx.root'
+    # TiDB 集群密码
+    TIDB_PASSWORD='xxxxxxx'
+    # 希望本示例使用的数据库名称
+    TIDB_DB_NAME='test'
+    # 使用的 TiDB 集群如果要求使用安全连接，并使用自定义的 CA 证书时
+    CA_PATH='/etc/ssl/cert.pem'
+    ```
 
 ## 运行
 
@@ -45,22 +72,8 @@ make test
 
 ### 单独运行某项测试
 
-以 `peewee_example.py` 为例：
+以 **peewee_example.py** 为例：`python3 peewee_example.py`。
 
-1. 安装依赖：
+### 预期输出
 
-    ```bash
-    pip install -r requirement.txt
-    ```
-
-2. 初始化表
-
-    ```bash
-    mycli --host 127.0.0.1 --port 4000 -u root --no-warn < player_init.sql
-    ```
-
-3. 运行脚本
-
-    ```bash
-    python3 peewee_example.py
-    ```
+[预期输出](/Expected-Output.md)
