@@ -12,27 +12,56 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import uuid
 from typing import List
 
 import MySQLdb
 from MySQLdb import Connection
 from MySQLdb.cursors import Cursor
+from dotenv import load_dotenv
 
 # If you don't have a TiDB cluster, just register here:
 # https://tidbcloud.com/console/clusters/create-cluster
 # And get a TiDB Cloud Serverless Tier in 1 min (no kidding, and it's free now)
 
+class Config:
+    def __init__(self):
+        load_dotenv()
+        self.tidb_host = os.getenv("TIDB_HOST", "127.0.0.1")
+        self.tidb_port = int(os.getenv("TIDB_PORT", "4000"))
+        self.tidb_user = os.getenv("TIDB_USER", "root")
+        self.tidb_password = os.getenv("TIDB_PASSWORD", "")
+        self.tidb_db_name = os.getenv("TIDB_DB_NAME", "test")
+        self.ca_path = os.getenv("CA_PATH", "")
 
-def get_connection(autocommit: bool = True) -> MySQLdb.Connection:
-    return MySQLdb.connect(
-        host="127.0.0.1",
-        port=4000,
-        user="root",
-        password="",
-        database="test",
-        autocommit=autocommit
-    )
+
+def get_mysqlclient_connection(autocommit:bool=True) -> MySQLdb.Connection:
+    config = Config()
+    db_conf = {
+        "host": config.tidb_host,
+        "port": config.tidb_port,
+        "user": config.tidb_user,
+        "password": config.tidb_password,
+        "database": config.tidb_db_name,
+        "autocommit": autocommit
+    }
+
+    if config.ca_path:
+        db_conf["ssl_mode"] = "VERIFY_IDENTITY"
+        db_conf["ssl"] = {"ca": config.ca_path}
+
+    return MySQLdb.connect(**db_conf)
+
+
+def __recreate_table(connection) -> None:
+    with connection.cursor() as cur:
+        cur.execute("DROP TABLE IF EXISTS player;")
+        cur.execute("CREATE TABLE player (`id` VARCHAR(36), `coins` INTEGER, `goods` INTEGER, PRIMARY KEY (`id`));")
+
+
+def mysqlclient_recreate_table() -> None:
+    __recreate_table(get_mysqlclient_connection(autocommit=True))
 
 
 def create_player(cursor: Cursor, player: tuple) -> None:
@@ -110,7 +139,7 @@ def trade(connection: Connection, sell_id: str, buy_id: str, amount: int, price:
 
 
 def simple_example() -> None:
-    with get_connection(autocommit=True) as conn:
+    with get_mysqlclient_connection(autocommit=True) as conn:
         with conn.cursor() as cur:
             # create a player, who has a coin and a goods.
             create_player(cur, ("test", 1, 1))
@@ -137,7 +166,7 @@ def simple_example() -> None:
 
 
 def trade_example() -> None:
-    with get_connection(autocommit=False) as conn:
+    with get_mysqlclient_connection(autocommit=False) as conn:
         with conn.cursor() as cur:
             # create two players
             # player 1: id is "1", has only 100 coins.
@@ -163,5 +192,6 @@ def trade_example() -> None:
             print(f'id:2, coins:{player2_coin}, goods:{player2_goods}')
 
 
+mysqlclient_recreate_table()
 simple_example()
 trade_example()
