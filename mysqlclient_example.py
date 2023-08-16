@@ -95,49 +95,6 @@ def get_count(cursor: Cursor) -> None:
     return cursor.fetchone()[0]
 
 
-def trade_check(cursor: Cursor, sell_id: str, buy_id: str, amount: int, price: int) -> bool:
-    get_player_with_lock_sql = "SELECT coins, goods FROM player WHERE id = %s FOR UPDATE"
-
-    # sell player goods check
-    cursor.execute(get_player_with_lock_sql, (sell_id,))
-    _, sell_goods = cursor.fetchone()
-    if sell_goods < amount:
-        print(f'sell player {sell_id} goods not enough')
-        return False
-
-    # buy player coins check
-    cursor.execute(get_player_with_lock_sql, (buy_id,))
-    buy_coins, _ = cursor.fetchone()
-    if buy_coins < price:
-        print(f'buy player {buy_id} coins not enough')
-        return False
-
-
-def trade_update(cursor: Cursor, sell_id: str, buy_id: str, amount: int, price: int) -> None:
-    update_player_sql = "UPDATE player set goods = goods + %s, coins = coins + %s WHERE id = %s"
-
-    # deduct the goods of seller, and raise his/her the coins
-    cursor.execute(update_player_sql, (-amount, price, sell_id))
-    # deduct the coins of buyer, and raise his/her the goods
-    cursor.execute(update_player_sql, (amount, -price, buy_id))
-
-
-def trade(connection: Connection, sell_id: str, buy_id: str, amount: int, price: int) -> None:
-    with connection.cursor() as cursor:
-        if not trade_check(cursor, sell_id, buy_id, amount, price):
-            connection.rollback()
-            return
-
-        try:
-            trade_update(cursor, sell_id, buy_id, amount, price)
-        except Exception as err:
-            connection.rollback()
-            print(f'something went wrong: {err}')
-        else:
-            connection.commit()
-            print("trade success")
-
-
 def simple_example() -> None:
     with get_mysqlclient_connection(autocommit=True) as conn:
         with conn.cursor() as cur:
@@ -163,6 +120,37 @@ def simple_example() -> None:
             three_players = get_players_with_limit(cur, 3)
             for player in three_players:
                 print(f'id:{player[0]}, coins:{player[1]}, goods:{player[2]}')
+
+
+def trade(connection: Connection, sell_id: str, buy_id: str, amount: int, price: int) -> None:
+    # This function should be called in a transaction.
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT coins, goods FROM player WHERE id = %s FOR UPDATE", (sell_id,))
+        _, sell_goods = cursor.fetchone()
+        if sell_goods < amount:
+            print(f'sell player {sell_id} goods not enough')
+            connection.rollback()
+            return
+
+        cursor.execute("SELECT coins, goods FROM player WHERE id = %s FOR UPDATE", (buy_id,))
+        buy_coins, _ = cursor.fetchone()
+        if buy_coins < price:
+            print(f'buy player {buy_id} coins not enough')
+            connection.rollback()
+            return
+
+        try:
+            update_player_sql = "UPDATE player set goods = goods + %s, coins = coins + %s WHERE id = %s"
+            # deduct the goods of seller, and raise his/her the coins
+            cursor.execute(update_player_sql, (-amount, price, sell_id))
+            # deduct the coins of buyer, and raise his/her the goods
+            cursor.execute(update_player_sql, (amount, -price, buy_id))
+        except Exception as err:
+            connection.rollback()
+            print(f'something went wrong: {err}')
+        else:
+            connection.commit()
+            print("trade success")
 
 
 def trade_example() -> None:
